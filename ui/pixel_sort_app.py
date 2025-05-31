@@ -7,10 +7,14 @@ from PyQt6.QtGui import QPixmap, QImage
 from PyQt6.QtCore import Qt
 from PIL import Image
 from .worker import PixelSortWorker
+from .logger import get_logger
 
 class PixelSortApp(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.logger = get_logger('PixelSortApp')
+        self.logger.info("Initializing PixelSortApp")
+        
         self.setWindowTitle("Enhanced Pixel Sorting App")
         self.setGeometry(50, 50, 1400, 800)
 
@@ -23,8 +27,10 @@ class PixelSortApp(QMainWindow):
 
         # Set up the UI
         self.setup_ui()
+        self.logger.info("PixelSortApp initialization complete")
 
     def setup_ui(self):
+        self.logger.debug("Setting up UI components")
         # Main layout
         main_layout = QVBoxLayout()
 
@@ -142,12 +148,15 @@ class PixelSortApp(QMainWindow):
         self.setMinimumSize(800, 600)
 
     def update_intensity_label(self, value):
+        self.logger.debug(f"Updating intensity label to {value}%")
         self.intensity_value_label.setText(f"{value}%")
 
     def update_angle_label(self, value):
+        self.logger.debug(f"Updating angle label to {value}°")
         self.angle_value_label.setText(f"{value}°")
 
     def load_image(self):
+        self.logger.info("Opening file dialog to load image")
         options = QFileDialog.Option.DontUseNativeDialog
         file_name, _ = QFileDialog.getOpenFileName(
             self, "Open Image File", "",
@@ -156,6 +165,7 @@ class PixelSortApp(QMainWindow):
         )
         if file_name:
             try:
+                self.logger.info(f"Loading image from: {file_name}")
                 image = Image.open(file_name).convert("RGB")
                 self.original_image = image
                 self.display_image(image, self.original_label)
@@ -164,10 +174,13 @@ class PixelSortApp(QMainWindow):
                 self.sort_button.setEnabled(True)
                 self.save_button.setEnabled(False)
                 self.progress_bar.setValue(0)
+                self.logger.info("Image loaded successfully")
             except Exception as e:
+                self.logger.error(f"Failed to load image: {str(e)}", exc_info=True)
                 QMessageBox.critical(self, "Error", f"Failed to load image:\n{e}")
 
     def display_image(self, image, label):
+        self.logger.debug(f"Displaying image of size {image.size}")
         # Convert PIL Image to QImage
         qimage = self.pil_to_qimage(image)
         pixmap = QPixmap.fromImage(qimage)
@@ -178,6 +191,7 @@ class PixelSortApp(QMainWindow):
         ))
 
     def resizeEvent(self, event):
+        self.logger.debug("Window resize event triggered")
         # Refresh images on window resize
         if self.original_image:
             self.display_image(self.original_image, self.original_label)
@@ -186,15 +200,18 @@ class PixelSortApp(QMainWindow):
         super().resizeEvent(event)
 
     def pil_to_qimage(self, image):
+        self.logger.debug("Converting PIL image to QImage")
         data = image.tobytes("raw", "RGB")
         qimage = QImage(data, image.width, image.height, QImage.Format.Format_RGB888)
         return qimage
 
     def sort_pixels(self):
         if self.original_image is None:
+            self.logger.warning("Attempted to sort pixels without loading an image")
             QMessageBox.warning(self, "Warning", "No image loaded to sort.")
             return
 
+        self.logger.info("Starting pixel sorting operation")
         # Disable buttons to prevent multiple operations
         self.sort_button.setEnabled(False)
         self.save_button.setEnabled(False)
