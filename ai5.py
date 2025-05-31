@@ -11,6 +11,7 @@ from PIL import Image
 import numpy as np
 from numba import njit
 import scipy.ndimage
+import os
 
 # Numba-compatible RGB to HSV conversion
 @njit
@@ -434,14 +435,27 @@ class PixelSortApp(QMainWindow):
                 QMessageBox.critical(self, "Error", f"Failed to save image:\n{e}")
 
 def main():
-    print("Starting application...")
-    app = QApplication(sys.argv)
-    print("QApplication created")
-    window = PixelSortApp()
-    print("Window created")
-    window.show()
-    print("Window shown")
-    sys.exit(app.exec_())
+    try:
+        print("Starting application...")
+        print(f"Display: {os.environ.get('DISPLAY')}")
+        print(f"Wayland Display: {os.environ.get('WAYLAND_DISPLAY')}")
+        print(f"Qt Platform: {os.environ.get('QT_QPA_PLATFORM')}")
+        
+        app = QApplication(sys.argv)
+        print("QApplication created")
+        print(f"Available platforms: {QApplication.platformName()}")
+        
+        window = PixelSortApp()
+        print("Window created")
+        window.show()
+        print("Window shown")
+        sys.exit(app.exec_())
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        print("Traceback:")
+        traceback.print_exc()
+        sys.exit(1)
 
 if __name__ == "__main__":
+    import os
     main()
