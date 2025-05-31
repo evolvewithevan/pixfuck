@@ -434,9 +434,13 @@ class PixelSortApp(QMainWindow):
                 QMessageBox.critical(self, "Error", f"Failed to save image:\n{e}")
 
 def main():
+    print("Starting application...")
     app = QApplication(sys.argv)
+    print("QApplication created")
     window = PixelSortApp()
+    print("Window created")
     window.show()
+    print("Window shown")
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
