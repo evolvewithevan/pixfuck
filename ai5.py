@@ -1,12 +1,12 @@
 import sys
 import traceback
-from PyQt5.QtWidgets import (
+from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QPushButton, QLabel,
     QVBoxLayout, QHBoxLayout, QWidget, QFileDialog,
     QMessageBox, QComboBox, QSlider, QProgressBar, QSizePolicy, QGridLayout, QGroupBox
 )
-from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtGui import QPixmap, QImage
+from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PIL import Image
 import numpy as np
 from numba import njit
@@ -253,12 +253,12 @@ class PixelSortApp(QMainWindow):
         angle_label = QLabel("Sort Angle:")
         sorting_layout.addWidget(angle_label, 1, 0)
 
-        angle_slider = QSlider(Qt.Horizontal)
+        angle_slider = QSlider(Qt.Orientation.Horizontal)
         angle_slider.setMinimum(0)
         angle_slider.setMaximum(359)
         angle_slider.setValue(0)
         angle_slider.setTickInterval(30)
-        angle_slider.setTickPosition(QSlider.TicksBelow)
+        angle_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.angle_slider = angle_slider
         sorting_layout.addWidget(angle_slider, 1, 1)
 
@@ -280,12 +280,12 @@ class PixelSortApp(QMainWindow):
         intensity_label = QLabel("Intensity:")
         sorting_layout.addWidget(intensity_label, 3, 0)
 
-        intensity_slider = QSlider(Qt.Horizontal)
+        intensity_slider = QSlider(Qt.Orientation.Horizontal)
         intensity_slider.setMinimum(1)
         intensity_slider.setMaximum(100)
         intensity_slider.setValue(100)
         intensity_slider.setTickInterval(10)
-        intensity_slider.setTickPosition(QSlider.TicksBelow)
+        intensity_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.intensity_slider = intensity_slider
         sorting_layout.addWidget(intensity_slider, 3, 1)
 
@@ -309,16 +309,16 @@ class PixelSortApp(QMainWindow):
         # Original Image
         original_container = QVBoxLayout()
         self.original_label = QLabel("Original Image")
-        self.original_label.setAlignment(Qt.AlignCenter)
-        self.original_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.original_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.original_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         original_container.addWidget(self.original_label)
         images_layout.addLayout(original_container)
 
         # Sorted Image
         sorted_container = QVBoxLayout()
         self.sorted_label = QLabel("Sorted Image")
-        self.sorted_label.setAlignment(Qt.AlignCenter)
-        self.sorted_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.sorted_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.sorted_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sorted_container.addWidget(self.sorted_label)
         images_layout.addLayout(sorted_container)
 
@@ -339,7 +339,7 @@ class PixelSortApp(QMainWindow):
         self.angle_value_label.setText(f"{value}°")
 
     def load_image(self):
-        options = QFileDialog.Options()
+        options = QFileDialog.Option.DontUseNativeDialog
         file_name, _ = QFileDialog.getOpenFileName(
             self, "Open Image File", "",
             "Images (*.png *.xpm *.jpg *.bmp *.gif);;All Files (*)",
@@ -365,7 +365,7 @@ class PixelSortApp(QMainWindow):
 
         # Scale pixmap to fit the label while maintaining aspect ratio
         label.setPixmap(pixmap.scaled(
-            label.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation
+            label.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
         ))
 
     def resizeEvent(self, event):
@@ -378,7 +378,7 @@ class PixelSortApp(QMainWindow):
 
     def pil_to_qimage(self, image):
         data = image.tobytes("raw", "RGB")
-        qimage = QImage(data, image.width, image.height, QImage.Format_RGB888)
+        qimage = QImage(data, image.width, image.height, QImage.Format.Format_RGB888)
         return qimage
 
     def sort_pixels(self):
@@ -421,7 +421,7 @@ class PixelSortApp(QMainWindow):
         if self.sorted_image is None:
             QMessageBox.warning(self, "Warning", "No sorted image to save.")
             return
-        options = QFileDialog.Options()
+        options = QFileDialog.Option.DontUseNativeDialog
         file_name, _ = QFileDialog.getSaveFileName(
             self, "Save Sorted Image", "",
             "PNG Files (*.png);;JPEG Files (*.jpg);;BMP Files (*.bmp);;All Files (*)",
@@ -449,7 +449,7 @@ def main():
         print("Window created")
         window.show()
         print("Window shown")
-        sys.exit(app.exec_())
+        sys.exit(app.exec())
     except Exception as e:
         print(f"Error: {str(e)}")
         print("Traceback:")
