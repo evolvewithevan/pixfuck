@@ -129,20 +129,8 @@ class PixelSortWorker(QThread):
         self.logger.debug(f"Starting pixel_sort with image size {image.size}")
         # Convert image to NumPy array
         img_array = np.array(image)
-        original_shape = img_array.shape
-        self.logger.debug(f"Original image shape: {original_shape}")
-
-        # Calculate the center of the image
-        center_y, center_x = original_shape[0] // 2, original_shape[1] // 2
-
-        # Rotate the image to align the sorting direction horizontally
-        self.logger.debug(f"Rotating image by {-angle} degrees")
-        rotated_array = scipy.ndimage.rotate(
-            img_array, -angle, reshape=False, order=1, mode='constant', cval=0
-        )
-
-        height, width, channels = rotated_array.shape
-        self.logger.debug(f"Rotated image shape: {rotated_array.shape}")
+        height, width, channels = img_array.shape
+        self.logger.debug(f"Original image shape: {img_array.shape}")
 
         # Map criterion to integer id
         criterion_map = {
@@ -156,97 +144,134 @@ class PixelSortWorker(QThread):
         self.logger.debug(f"Using criterion ID: {criterion_id} ({criterion})")
         self.logger.debug(f"Using pattern: {pattern}")
 
-        sorted_array = rotated_array.copy()
-
-        # Apply pattern-based sorting
-        if pattern == 'Linear':
-            # Process each line horizontally
-            for i in range(height):
-                line = sorted_array[i, :, :].copy()
-                sorted_line = process_line(line, criterion_id)
-                if intensity < 1.0:
-                    mask = np.random.rand(line.shape[0]) < intensity
-                    blended_line = line.copy()
-                    blended_line[mask] = sorted_line[mask]
-                    sorted_array[i, :, :] = blended_line
-                else:
-                    sorted_array[i, :, :] = sorted_line
-                progress_percent = int(((i + 1) / height) * 100)
-                self.progress.emit(progress_percent)
-        elif pattern == 'Radial':
-            # TODO: Implement radial pattern
-            self.logger.warning("Radial pattern not implemented yet, using linear pattern")
-            for i in range(height):
-                line = sorted_array[i, :, :].copy()
-                sorted_line = process_line(line, criterion_id)
-                if intensity < 1.0:
-                    mask = np.random.rand(line.shape[0]) < intensity
-                    blended_line = line.copy()
-                    blended_line[mask] = sorted_line[mask]
-                    sorted_array[i, :, :] = blended_line
-                else:
-                    sorted_array[i, :, :] = sorted_line
-                progress_percent = int(((i + 1) / height) * 100)
-                self.progress.emit(progress_percent)
-        elif pattern == 'Spiral':
-            # TODO: Implement spiral pattern
-            self.logger.warning("Spiral pattern not implemented yet, using linear pattern")
-            for i in range(height):
-                line = sorted_array[i, :, :].copy()
-                sorted_line = process_line(line, criterion_id)
-                if intensity < 1.0:
-                    mask = np.random.rand(line.shape[0]) < intensity
-                    blended_line = line.copy()
-                    blended_line[mask] = sorted_line[mask]
-                    sorted_array[i, :, :] = blended_line
-                else:
-                    sorted_array[i, :, :] = sorted_line
-                progress_percent = int(((i + 1) / height) * 100)
-                self.progress.emit(progress_percent)
-        elif pattern == 'Wave':
-            # TODO: Implement wave pattern
-            self.logger.warning("Wave pattern not implemented yet, using linear pattern")
-            for i in range(height):
-                line = sorted_array[i, :, :].copy()
-                sorted_line = process_line(line, criterion_id)
-                if intensity < 1.0:
-                    mask = np.random.rand(line.shape[0]) < intensity
-                    blended_line = line.copy()
-                    blended_line[mask] = sorted_line[mask]
-                    sorted_array[i, :, :] = blended_line
-                else:
-                    sorted_array[i, :, :] = sorted_line
-                progress_percent = int(((i + 1) / height) * 100)
-                self.progress.emit(progress_percent)
+        # Convert angle to radians
+        angle_rad = np.radians(angle)
+        
+        # Normalize angle to -180 to 180 degrees
+        angle_rad = angle_rad % (2 * np.pi)
+        if angle_rad > np.pi:
+            angle_rad -= 2 * np.pi
+            
+        # Determine if we should shear horizontally or vertically
+        # For angles between -45 and 45 degrees, shear horizontally
+        # For angles between 45 and 135 degrees, shear vertically
+        if -np.pi/4 <= angle_rad <= np.pi/4:
+            # Shear horizontally
+            shear_factor = np.tan(angle_rad)
+            shear_matrix = np.array([
+                [1, shear_factor, 0],
+                [0, 1, 0],
+                [0, 0, 1]
+            ])
+            inverse_shear_matrix = np.array([
+                [1, -shear_factor, 0],
+                [0, 1, 0],
+                [0, 0, 1]
+            ])
+            # Sort horizontally
+            sort_axis = 1
         else:
-            # Default to linear pattern
-            self.logger.warning(f"Unknown pattern '{pattern}', using linear pattern")
-            for i in range(height):
-                line = sorted_array[i, :, :].copy()
-                sorted_line = process_line(line, criterion_id)
-                if intensity < 1.0:
-                    mask = np.random.rand(line.shape[0]) < intensity
-                    blended_line = line.copy()
-                    blended_line[mask] = sorted_line[mask]
-                    sorted_array[i, :, :] = blended_line
-                else:
-                    sorted_array[i, :, :] = sorted_line
-                progress_percent = int(((i + 1) / height) * 100)
-                self.progress.emit(progress_percent)
-
-        # Rotate the sorted image back to original orientation
-        self.logger.debug(f"Rotating image back by {angle} degrees")
-        sorted_array = scipy.ndimage.rotate(
-            sorted_array, angle, reshape=False, order=1, mode='constant', cval=0
+            # Shear vertically
+            shear_factor = 1.0 / np.tan(angle_rad)
+            shear_matrix = np.array([
+                [1, 0, 0],
+                [shear_factor, 1, 0],
+                [0, 0, 1]
+            ])
+            inverse_shear_matrix = np.array([
+                [1, 0, 0],
+                [-shear_factor, 1, 0],
+                [0, 0, 1]
+            ])
+            # Sort vertically
+            sort_axis = 0
+        
+        # Apply shear transformation
+        self.logger.debug("Applying shear transformation")
+        sheared_array = scipy.ndimage.affine_transform(
+            img_array,
+            shear_matrix,
+            offset=[0, 0, 0],
+            order=1,
+            mode='wrap',
+            cval=0
         )
 
-        # Ensure the image maintains its original dimensions
-        sorted_array = self.maintain_aspect_ratio(sorted_array, original_shape)
+        # Sort pixels
+        self.logger.debug("Sorting pixels")
+        sorted_array = sheared_array.copy()
+        
+        # Process each line along the appropriate axis
+        if sort_axis == 1:  # Sort horizontally
+            for i in range(sheared_array.shape[0]):
+                line = sorted_array[i, :, :].copy()
+                sorted_line = process_line(line, criterion_id)
+                if intensity < 1.0:
+                    mask = np.random.rand(line.shape[0]) < intensity
+                    blended_line = line.copy()
+                    blended_line[mask] = sorted_line[mask]
+                    sorted_array[i, :, :] = blended_line
+                else:
+                    sorted_array[i, :, :] = sorted_line
+                progress_percent = int(((i + 1) / sheared_array.shape[0]) * 100)
+                self.progress.emit(progress_percent)
+        else:  # Sort vertically
+            for i in range(sheared_array.shape[1]):
+                line = sorted_array[:, i, :].copy()
+                sorted_line = process_line(line, criterion_id)
+                if intensity < 1.0:
+                    mask = np.random.rand(line.shape[0]) < intensity
+                    blended_line = line.copy()
+                    blended_line[mask] = sorted_line[mask]
+                    sorted_array[:, i, :] = blended_line
+                else:
+                    sorted_array[:, i, :] = sorted_line
+                progress_percent = int(((i + 1) / sheared_array.shape[1]) * 100)
+                self.progress.emit(progress_percent)
+
+        # Apply inverse shear transformation
+        self.logger.debug("Applying inverse shear transformation")
+        result_array = scipy.ndimage.affine_transform(
+            sorted_array,
+            inverse_shear_matrix,
+            offset=[0, 0, 0],
+            order=1,
+            mode='wrap',
+            cval=0
+        )
+
+        # Ensure the result has the same shape as the input
+        if result_array.shape != img_array.shape:
+            result_array = self.maintain_aspect_ratio(result_array, img_array.shape)
 
         # Convert back to PIL Image
-        sorted_image = Image.fromarray(sorted_array.astype(np.uint8))
+        sorted_image = Image.fromarray(result_array.astype(np.uint8))
         self.logger.debug("Pixel sorting completed")
         return sorted_image
+
+    def get_line_points(self, x1, y1, x2, y2):
+        """Get all points along a line using Bresenham's line algorithm."""
+        points = []
+        dx = abs(x2 - x1)
+        dy = abs(y2 - y1)
+        x, y = x1, y1
+        n = 1 + dx + dy
+        x_inc = 1 if x2 > x1 else -1
+        y_inc = 1 if y2 > y1 else -1
+        error = dx - dy
+        dx *= 2
+        dy *= 2
+
+        for _ in range(n):
+            points.append((x, y))
+            if error > 0:
+                x += x_inc
+                error -= dy
+            else:
+                y += y_inc
+                error += dx
+
+        return points
 
     def maintain_aspect_ratio(self, img_array, target_shape):
         """Maintain aspect ratio while resizing the image to match target shape."""
