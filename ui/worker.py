@@ -104,19 +104,20 @@ class PixelSortWorker(QThread):
     finished = pyqtSignal(Image.Image)
     error = pyqtSignal(str)
 
-    def __init__(self, image, angle, criterion, intensity):
+    def __init__(self, image, angle, criterion, pattern, intensity):
         super().__init__()
         self.logger = get_logger('PixelSortWorker')
         self.image = image
         self.angle = angle
         self.criterion = criterion
+        self.pattern = pattern
         self.intensity = intensity
-        self.logger.info(f"Initialized worker with angle={angle}, criterion={criterion}, intensity={intensity}")
+        self.logger.info(f"Initialized worker with angle={angle}, criterion={criterion}, pattern={pattern}, intensity={intensity}")
 
     def run(self):
         try:
             self.logger.info("Starting pixel sorting operation")
-            sorted_image = self.pixel_sort(self.image, self.angle, self.criterion, self.intensity)
+            sorted_image = self.pixel_sort(self.image, self.angle, self.criterion, self.pattern, self.intensity)
             self.logger.info("Pixel sorting completed successfully")
             self.finished.emit(sorted_image)
         except Exception as e:
@@ -124,7 +125,7 @@ class PixelSortWorker(QThread):
             tb = traceback.format_exc()
             self.error.emit(f"{str(e)}\n{tb}")
 
-    def pixel_sort(self, image, angle, criterion, intensity):
+    def pixel_sort(self, image, angle, criterion, pattern, intensity):
         self.logger.debug(f"Starting pixel_sort with image size {image.size}")
         # Convert image to NumPy array
         img_array = np.array(image)
@@ -150,29 +151,85 @@ class PixelSortWorker(QThread):
         }
         criterion_id = criterion_map.get(criterion, 0)
         self.logger.debug(f"Using criterion ID: {criterion_id} ({criterion})")
+        self.logger.debug(f"Using pattern: {pattern}")
 
         sorted_array = rotated_array.copy()
 
-        for i in range(height):
-            line = sorted_array[i, :, :].copy()
-
-            # Use Numba-compiled function to process the line
-            sorted_line = process_line(line, criterion_id)
-
-            # Apply sorting based on intensity
-            if intensity < 1.0:
-                self.logger.debug(f"Applying partial sorting with intensity {intensity}")
-                # Randomly select pixels to replace based on intensity
-                mask = np.random.rand(line.shape[0]) < intensity
-                blended_line = line.copy()
-                blended_line[mask] = sorted_line[mask]
-                sorted_array[i, :, :] = blended_line
-            else:
-                sorted_array[i, :, :] = sorted_line
-
-            # Update progress
-            progress_percent = int(((i + 1) / height) * 100)
-            self.progress.emit(progress_percent)
+        # Apply pattern-based sorting
+        if pattern == 'Linear':
+            # Process each line horizontally
+            for i in range(height):
+                line = sorted_array[i, :, :].copy()
+                sorted_line = process_line(line, criterion_id)
+                if intensity < 1.0:
+                    mask = np.random.rand(line.shape[0]) < intensity
+                    blended_line = line.copy()
+                    blended_line[mask] = sorted_line[mask]
+                    sorted_array[i, :, :] = blended_line
+                else:
+                    sorted_array[i, :, :] = sorted_line
+                progress_percent = int(((i + 1) / height) * 100)
+                self.progress.emit(progress_percent)
+        elif pattern == 'Radial':
+            # TODO: Implement radial pattern
+            self.logger.warning("Radial pattern not implemented yet, using linear pattern")
+            for i in range(height):
+                line = sorted_array[i, :, :].copy()
+                sorted_line = process_line(line, criterion_id)
+                if intensity < 1.0:
+                    mask = np.random.rand(line.shape[0]) < intensity
+                    blended_line = line.copy()
+                    blended_line[mask] = sorted_line[mask]
+                    sorted_array[i, :, :] = blended_line
+                else:
+                    sorted_array[i, :, :] = sorted_line
+                progress_percent = int(((i + 1) / height) * 100)
+                self.progress.emit(progress_percent)
+        elif pattern == 'Spiral':
+            # TODO: Implement spiral pattern
+            self.logger.warning("Spiral pattern not implemented yet, using linear pattern")
+            for i in range(height):
+                line = sorted_array[i, :, :].copy()
+                sorted_line = process_line(line, criterion_id)
+                if intensity < 1.0:
+                    mask = np.random.rand(line.shape[0]) < intensity
+                    blended_line = line.copy()
+                    blended_line[mask] = sorted_line[mask]
+                    sorted_array[i, :, :] = blended_line
+                else:
+                    sorted_array[i, :, :] = sorted_line
+                progress_percent = int(((i + 1) / height) * 100)
+                self.progress.emit(progress_percent)
+        elif pattern == 'Wave':
+            # TODO: Implement wave pattern
+            self.logger.warning("Wave pattern not implemented yet, using linear pattern")
+            for i in range(height):
+                line = sorted_array[i, :, :].copy()
+                sorted_line = process_line(line, criterion_id)
+                if intensity < 1.0:
+                    mask = np.random.rand(line.shape[0]) < intensity
+                    blended_line = line.copy()
+                    blended_line[mask] = sorted_line[mask]
+                    sorted_array[i, :, :] = blended_line
+                else:
+                    sorted_array[i, :, :] = sorted_line
+                progress_percent = int(((i + 1) / height) * 100)
+                self.progress.emit(progress_percent)
+        else:
+            # Default to linear pattern
+            self.logger.warning(f"Unknown pattern '{pattern}', using linear pattern")
+            for i in range(height):
+                line = sorted_array[i, :, :].copy()
+                sorted_line = process_line(line, criterion_id)
+                if intensity < 1.0:
+                    mask = np.random.rand(line.shape[0]) < intensity
+                    blended_line = line.copy()
+                    blended_line[mask] = sorted_line[mask]
+                    sorted_array[i, :, :] = blended_line
+                else:
+                    sorted_array[i, :, :] = sorted_line
+                progress_percent = int(((i + 1) / height) * 100)
+                self.progress.emit(progress_percent)
 
         # Rotate the sorted image back to original orientation
         self.logger.debug(f"Rotating image back by {angle} degrees")

@@ -126,10 +126,11 @@ class PixelSortApp(QMainWindow):
         # Get sorting parameters
         angle = self.angle_slider.value()
         criterion = self.criteria_combo.currentText()
+        pattern = self.pattern_combo.currentText()
         intensity = self.intensity_slider.value() / 100.0
 
         # Start the worker thread
-        self.worker = PixelSortWorker(self.original_image, angle, criterion, intensity)
+        self.worker = PixelSortWorker(self.original_image, angle, criterion, pattern, intensity)
         self.worker.progress.connect(self.update_progress)
         self.worker.finished.connect(self.on_sort_finished)
         self.worker.error.connect(self.on_sort_error)
