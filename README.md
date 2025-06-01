@@ -17,6 +17,24 @@ A pixel-sorting playground built with Python and PyQt6! Transform your images in
 - 🖼️ Wide format support (JPEG, PNG, BMP, TIFF, GIF, WebP)
 - 📝 Comprehensive logging system
 
+## 🎨 Sorting Algorithms Explained
+
+Each algorithm creates unique visual effects by sorting pixels based on different color properties:
+
+### 🌟 Brightness-based Sorting
+Sorts pixels based on their overall brightness (luminance). This creates dramatic light-to-dark or dark-to-light gradients, perfect for creating ethereal, flowing effects. Great for emphasizing the contrast in your images!
+
+### 🌈 Hue-based Sorting
+Arranges pixels according to their color hue in the HSL color space. This creates beautiful rainbow-like patterns, especially in images with diverse colors. The sorting follows the color wheel, making it ideal for creating psychedelic effects.
+
+### 💫 Saturation-based Sorting
+Organizes pixels by their color intensity or purity. This algorithm is particularly effective for creating dramatic effects in images with varying levels of color saturation. It can make dull areas pop or create smooth transitions between vibrant and muted regions.
+
+### ✨ Lightness-based Sorting
+Similar to brightness but works in the HSL color space, focusing on the lightness component. This creates more nuanced gradients than brightness-based sorting, as it's specifically designed to work with the human perception of lightness. Perfect for creating subtle, atmospheric effects.
+
+Each algorithm can be combined with different sorting directions (horizontal, vertical, or diagonal) and thresholds to create unique artistic effects. Experiment with different combinations to discover your favorite style! 🎯
+
 ## 🛠️ Requirements
 
 - Python 3.6 or higher
