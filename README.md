@@ -24,7 +24,7 @@ A pixel-sorting playground built with Python and PyQt6! Transform your images in
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/pixFuck.git
+git clone https://github.com/evolvewithevan/pixFuck.git
 cd pixFuck
 ```
 
