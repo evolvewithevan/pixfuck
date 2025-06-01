@@ -138,8 +138,7 @@ class PixelSortWorker(QThread):
         # Rotate the image to align the sorting direction horizontally
         self.logger.debug(f"Rotating image by {-angle} degrees")
         rotated_array = scipy.ndimage.rotate(
-            img_array, -angle, reshape=False, order=1, mode='constant', cval=0,
-            center=(center_y, center_x)
+            img_array, -angle, reshape=False, order=1, mode='constant', cval=0
         )
 
         height, width, channels = rotated_array.shape
@@ -238,8 +237,7 @@ class PixelSortWorker(QThread):
         # Rotate the sorted image back to original orientation
         self.logger.debug(f"Rotating image back by {angle} degrees")
         sorted_array = scipy.ndimage.rotate(
-            sorted_array, angle, reshape=False, order=1, mode='constant', cval=0,
-            center=(center_y, center_x)
+            sorted_array, angle, reshape=False, order=1, mode='constant', cval=0
         )
 
         # Ensure the image maintains its original dimensions
