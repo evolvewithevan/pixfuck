@@ -4,10 +4,10 @@
  <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
-    <x>50</x>
-    <y>50</y>
+    <x>0</x>
+    <y>0</y>
     <width>1400</width>
-    <height>800</height>
+    <height>740</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,6 +17,12 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QGroupBox" name="file_ops_group">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>80</height>
+       </size>
+      </property>
       <property name="title">
        <string>File Operations</string>
       </property>
@@ -43,6 +49,12 @@
     </item>
     <item>
      <widget class="QGroupBox" name="sorting_options_group">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>200</height>
+       </size>
+      </property>
       <property name="title">
        <string>Sorting Options</string>
       </property>
@@ -76,10 +88,10 @@
           <number>0</number>
          </property>
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="tickPosition">
-          <enum>QSlider::TicksBelow</enum>
+          <enum>QSlider::TickPosition::TicksBelow</enum>
          </property>
          <property name="tickInterval">
           <number>30</number>
@@ -88,6 +100,9 @@
        </item>
        <item row="1" column="2">
         <widget class="QSpinBox" name="angle_value_label">
+         <property name="suffix">
+          <string>°</string>
+         </property>
          <property name="minimum">
           <number>0</number>
          </property>
@@ -96,9 +111,6 @@
          </property>
          <property name="value">
           <number>0</number>
-         </property>
-         <property name="suffix">
-          <string>°</string>
          </property>
         </widget>
        </item>
@@ -157,10 +169,10 @@
           <number>100</number>
          </property>
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="tickPosition">
-          <enum>QSlider::TicksBelow</enum>
+          <enum>QSlider::TickPosition::TicksBelow</enum>
          </property>
          <property name="tickInterval">
           <number>10</number>
@@ -169,6 +181,9 @@
        </item>
        <item row="3" column="2">
         <widget class="QSpinBox" name="intensity_value_label">
+         <property name="suffix">
+          <string>%</string>
+         </property>
          <property name="minimum">
           <number>1</number>
          </property>
@@ -177,9 +192,6 @@
          </property>
          <property name="value">
           <number>100</number>
-         </property>
-         <property name="suffix">
-          <string>%</string>
          </property>
         </widget>
        </item>
@@ -200,10 +212,10 @@
         <item>
          <widget class="QLabel" name="original_label">
           <property name="text">
-           <string>Original Image</string>
+           <string>Original Image, Load an image with the button above</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -214,10 +226,10 @@
         <item>
          <widget class="QLabel" name="sorted_label">
           <property name="text">
-           <string>Sorted Image</string>
+           <string>Sorted Image will Render Here upon completion of Sorting.</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -233,7 +245,7 @@
      <x>0</x>
      <y>0</y>
      <width>1400</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
@@ -241,4 +253,4 @@
  </widget>
  <resources/>
  <connections/>
-</ui> 
+</ui>
