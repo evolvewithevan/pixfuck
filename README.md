@@ -2,13 +2,19 @@
 
 A pixel-sorting playground built with Python and PyQt6! Transform your images into mesmerizing works of art by sorting pixels in creative ways. ✨
 
+![Preview](./assets/preview.webp)
+
+
 ## ✨ Features
 
 - 🎯 Modern and intuitive PyQt6 interface
-- 🎨 Real-time pixel sorting preview
 - 🔄 Multiple sorting algorithms to play with
+  - Brightness-based sorting
+  - Hue-based sorting
+  - Saturation-based sorting
+  - Lightness-based sorting
 - 📸 Support for various image formats
-- ⚡ Background processing for smooth performance
+- 🖼️ Wide format support (JPEG, PNG, BMP, TIFF, GIF, WebP)
 - 📝 Comprehensive logging system
 
 ## 🛠️ Requirements
