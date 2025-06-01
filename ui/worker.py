@@ -62,7 +62,7 @@ def row_min(arr):
         for j in range(1, n_cols):
             if arr[i, j] < min_val:
                 min_val = arr[i, j]
-            result[i] = min_val
+        result[i] = min_val
     return result
 
 @njit
