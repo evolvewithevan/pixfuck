@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QLabel
+from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QLabel, QSpinBox
 from PyQt6.QtGui import QPixmap, QImage
 from PyQt6.QtCore import Qt
 from PyQt6 import uic
@@ -37,16 +37,26 @@ class PixelSortApp(QMainWindow):
         self.load_button.clicked.connect(self.load_image)
         self.save_button.clicked.connect(self.save_image)
         self.sort_button.clicked.connect(self.sort_pixels)
-        self.angle_slider.valueChanged.connect(self.update_angle_label)
-        self.intensity_slider.valueChanged.connect(self.update_intensity_label)
+        self.angle_slider.valueChanged.connect(self.update_angle_spinbox)
+        self.intensity_slider.valueChanged.connect(self.update_intensity_spinbox)
+        self.angle_value_label.valueChanged.connect(self.update_angle_slider)
+        self.intensity_value_label.valueChanged.connect(self.update_intensity_slider)
 
-    def update_intensity_label(self, value):
-        self.logger.debug(f"Updating intensity label to {value}%")
-        self.intensity_value_label.setText(f"{value}%")
+    def update_intensity_spinbox(self, value):
+        self.logger.debug(f"Updating intensity spinbox to {value}%")
+        self.intensity_value_label.setValue(value)
 
-    def update_angle_label(self, value):
-        self.logger.debug(f"Updating angle label to {value}°")
-        self.angle_value_label.setText(f"{value}°")
+    def update_angle_spinbox(self, value):
+        self.logger.debug(f"Updating angle spinbox to {value}°")
+        self.angle_value_label.setValue(value)
+
+    def update_intensity_slider(self, value):
+        self.logger.debug(f"Updating intensity slider to {value}%")
+        self.intensity_slider.setValue(value)
+
+    def update_angle_slider(self, value):
+        self.logger.debug(f"Updating angle slider to {value}°")
+        self.angle_slider.setValue(value)
 
     def load_image(self):
         self.logger.info("Opening file dialog to load image")
