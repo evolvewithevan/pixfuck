@@ -132,10 +132,14 @@ class PixelSortWorker(QThread):
         original_shape = img_array.shape
         self.logger.debug(f"Original image shape: {original_shape}")
 
+        # Calculate the center of the image
+        center_y, center_x = original_shape[0] // 2, original_shape[1] // 2
+
         # Rotate the image to align the sorting direction horizontally
         self.logger.debug(f"Rotating image by {-angle} degrees")
         rotated_array = scipy.ndimage.rotate(
-            img_array, -angle, reshape=True, order=0, mode='nearest'
+            img_array, -angle, reshape=False, order=1, mode='constant', cval=0,
+            center=(center_y, center_x)
         )
 
         height, width, channels = rotated_array.shape
@@ -234,35 +238,53 @@ class PixelSortWorker(QThread):
         # Rotate the sorted image back to original orientation
         self.logger.debug(f"Rotating image back by {angle} degrees")
         sorted_array = scipy.ndimage.rotate(
-            sorted_array, angle, reshape=True, order=0, mode='nearest'
+            sorted_array, angle, reshape=False, order=1, mode='constant', cval=0,
+            center=(center_y, center_x)
         )
 
-        # Crop or pad the image to match the original size
-        self.logger.debug("Cropping/padding image to match original size")
-        sorted_array = self.crop_or_pad(sorted_array, original_shape)
+        # Ensure the image maintains its original dimensions
+        sorted_array = self.maintain_aspect_ratio(sorted_array, original_shape)
 
         # Convert back to PIL Image
         sorted_image = Image.fromarray(sorted_array.astype(np.uint8))
         self.logger.debug("Pixel sorting completed")
         return sorted_image
 
-    def crop_or_pad(self, img_array, target_shape):
-        self.logger.debug(f"Crop/pad operation: current shape {img_array.shape} -> target shape {target_shape}")
-        # Get current shape
-        current_shape = img_array.shape
-        pad_height = max(0, target_shape[0] - current_shape[0])
-        pad_width = max(0, target_shape[1] - current_shape[1])
-
-        # Pad the image if it's smaller than the target
-        if pad_height > 0 or pad_width > 0:
-            self.logger.debug(f"Padding image: height={pad_height}, width={pad_width}")
-            img_array = np.pad(
-                img_array,
-                ((0, pad_height), (0, pad_width), (0, 0)),
-                mode='constant',
-                constant_values=0
-            )
-
-        # Crop the image if it's larger than the target
-        img_array = img_array[:target_shape[0], :target_shape[1], :]
-        return img_array 
+    def maintain_aspect_ratio(self, img_array, target_shape):
+        """Maintain aspect ratio while resizing the image to match target shape."""
+        self.logger.debug(f"Maintaining aspect ratio: current shape {img_array.shape} -> target shape {target_shape}")
+        
+        current_height, current_width = img_array.shape[:2]
+        target_height, target_width = target_shape[:2]
+        
+        # Calculate scaling factors
+        scale_h = target_height / current_height
+        scale_w = target_width / current_width
+        
+        # Use the smaller scaling factor to maintain aspect ratio
+        scale = min(scale_h, scale_w)
+        
+        # Calculate new dimensions
+        new_height = int(current_height * scale)
+        new_width = int(current_width * scale)
+        
+        # Resize the image
+        resized = scipy.ndimage.zoom(
+            img_array,
+            (scale, scale, 1) if len(img_array.shape) == 3 else (scale, scale),
+            order=1,
+            mode='constant',
+            cval=0
+        )
+        
+        # Create a new array with target shape
+        result = np.zeros(target_shape, dtype=img_array.dtype)
+        
+        # Calculate padding
+        pad_h = (target_height - new_height) // 2
+        pad_w = (target_width - new_width) // 2
+        
+        # Copy the resized image into the center of the result
+        result[pad_h:pad_h + new_height, pad_w:pad_w + new_width] = resized
+        
+        return result 
