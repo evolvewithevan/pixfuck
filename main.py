@@ -44,11 +44,13 @@ def run_application():
         
         window.show()
         app_logger.info("Window shown")
-        sys.exit(app.exec())
+        exit_code = app.exec()
+        app_logger.info("Application exited successfully")
+        sys.exit(exit_code)
     except Exception as e:
         handle_error(app_logger, e)
 
 if __name__ == "__main__":
     run_application()
-    
+
 # coast was here :3
