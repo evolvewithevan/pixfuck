@@ -35,14 +35,7 @@ Similar to brightness but works in the HSL color space, focusing on the lightnes
 
 Each algorithm can be combined with different sorting directions (horizontal, vertical, or diagonal) and thresholds to create unique artistic effects. Experiment with different combinations to discover your favorite style! 🎯
 
-## 🛠️ Requirements
 
-- Python 3.6 or higher
-- PyQt6 >= 6.4.0
-- Pillow >= 9.0.0
-- numpy >= 1.20.0
-- numba >= 0.55.0
-- scipy >= 1.7.0
 
 ## 🚀 Installation
 
@@ -60,6 +53,15 @@ chmod +x main.bin  # For macOS
 ```
 
 ### Option 2: Running from Source (Recommended for Developers)
+
+#### 🛠️ Requirements
+
+- Python 3.6 or higher
+- PyQt6 >= 6.4.0
+- Pillow >= 9.0.0
+- numpy >= 1.20.0
+- numba >= 0.55.0
+- scipy >= 1.7.0
 
 1. Clone the repository:
 ```bash
