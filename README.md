@@ -46,6 +46,21 @@ Each algorithm can be combined with different sorting directions (horizontal, ve
 
 ## 🚀 Installation
 
+### Option 1: Using the Binary (Recommended for End Users)
+
+1. Download the appropriate binary for your operating system from the releases page
+2. Make the binary executable (Linux/macOS only):
+```bash
+chmod +x main.bin  # For Linux
+chmod +x main.bin  # For macOS
+```
+3. Run the application:
+```bash
+./main.bin  # Linux/macOS
+```
+
+### Option 2: Running from Source (Recommended for Developers)
+
 1. Clone the repository:
 ```bash
 git clone https://github.com/evolvewithevan/pixFuck.git
@@ -65,12 +80,51 @@ source venv/bin/activate  # On Linux/Mac
 pip install -r requirements.txt
 ```
 
-## 🎮 Usage
-
-Run the application:
+4. Run the application:
 ```bash
 python main.py
 ```
+
+### Building from Source
+
+If you want to create your own binary:
+
+1. Install Nuitka and its dependencies:
+```bash
+pip install nuitka ordered-set zstandard
+```
+
+2. Build the binary:
+```bash
+# Linux
+python -m nuitka --standalone --follow-imports --enable-plugin=pyqt6 --include-package-data=PyQt6 --include-package-data=PIL --include-package-data=numpy --include-package-data=numba --include-package-data=scipy --include-data-dir=assets=assets --include-data-dir=ui=ui --onefile --remove-output main.py
+
+# Windows
+python -m nuitka --standalone --follow-imports --enable-plugin=pyqt6 --include-package-data=PyQt6 --include-package-data=PIL --include-package-data=numpy --include-package-data=numba --include-package-data=scipy --include-data-dir=assets=assets --include-data-dir=ui=ui --onefile --remove-output main.py
+
+# macOS
+python -m nuitka --standalone --follow-imports --enable-plugin=pyqt6 --include-package-data=PyQt6 --include-package-data=PIL --include-package-data=numpy --include-package-data=numba --include-package-data=scipy --include-data-dir=assets=assets --include-data-dir=ui=ui --onefile --remove-output main.py
+```
+
+Note: Building binaries requires compilation on the target platform. You cannot cross-compile from one platform to another.
+
+## 🎮 Usage
+
+### Using the Binary
+1. Launch the application using the binary
+2. Use the interface to:
+   - Load an image
+   - Select a sorting algorithm
+   - Adjust sorting parameters
+   - Save the processed image
+
+### Using from Source
+1. Run the application using `python main.py`
+2. Use the interface to:
+   - Load an image
+   - Select a sorting algorithm
+   - Adjust sorting parameters
+   - Save the processed image
 
 ## 📁 Project Structure
 
