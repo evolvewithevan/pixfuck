@@ -2,7 +2,7 @@ use pixfuck::{sort_image, SortMode};
 use std::io::{self, Write};
 
 fn main() {
-    println!("Welcome to pixfuck CLI! Please enter input file path:");
+    println!("Welcome to Pixfuck! Please enter input file realpath:");
     let mut input = String::new();
     io::stdin().read_line(&mut input).unwrap();
     let input = input.trim();
@@ -27,7 +27,7 @@ fn main() {
     };
 
     match sort_image(input, output, mode) {
-        Ok(_) => println!("Image sorted and saved! 🎉"),
+        Ok(_) => println!("Image sorted and saved to this directory!"),
         Err(e) => eprintln!("Error: {}", e),
     }
 }
