@@ -1,5 +1,10 @@
 # Development Guide
 
+- [Documentation Index](index.md)
+- [API Documentation](api.md)
+- [Contributing Guidelines](contributing.md)
+- [Architecture Overview](architecture.md)
+
 This guide provides detailed instructions for setting up a development environment and working with the Pixfuck codebase.
 
 ## Prerequisites
@@ -42,10 +47,8 @@ pixfuck/
 │   ├── main.rs      # Entry point
 │   ├── lib.rs       # Library code
 │   └── utils/       # Utility functions
-├── tests/           # Test files
 ├── docs/            # Documentation
-├── examples/        # Example code
-└── assets/          # Test images and resources
+└── assets/          # Preview image(s)
 ```
 
 ## Development Workflow

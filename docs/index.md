@@ -1,5 +1,10 @@
 # Pixfuck Documentation
 
+- [API Documentation](api.md)
+- [Development Guide](development.md)
+- [Contributing Guidelines](contributing.md)
+- [Architecture Overview](architecture.md)
+
 Welcome to the Pixfuck documentation. This documentation is designed to help developers understand, use, and contribute to the Pixfuck project.
 
 ## Table of Contents

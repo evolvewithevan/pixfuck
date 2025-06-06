@@ -50,7 +50,22 @@ Pre-built binaries are not available for this development branch. Please build f
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](docs/contributing.md) for details on how to get started.
+We welcome contributions! This documentation is designed to help developers understand, use, and contribute to the Pixfuck project.
+
+## Table of Contents
+
+#### 0. [Documentation Index](index.md)
+1. [API Documentation](api.md) - Detailed documentation of all public APIs and functions
+2. [Development Guide](development.md) - Guide for setting up the development environment and workflow
+3. [Contributing Guidelines](contributing.md) - Guidelines for contributing to the project
+4. [Architecture Overview](architecture.md) - High-level overview of the project's architecture
+
+## Quick Links
+
+- [GitHub Repository](https://github.com/evolvewithevan/pixfuck)
+- [Issue Tracker](https://github.com/evolvewithevan/pixfuck/issues)
+- [Main Branch](https://github.com/evolvewithevan/pixfuck/tree/main)
+
 
 ## License
 

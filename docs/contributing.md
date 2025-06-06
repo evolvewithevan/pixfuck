@@ -1,5 +1,10 @@
 # Contributing to Pixfuck
 
+- [Documentation Index](index.md)
+- [API Documentation](api.md)
+- [Development Guide](development.md)
+- [Architecture Overview](architecture.md)
+
 Thank you for your interest in contributing to Pixfuck! This document provides guidelines and instructions for contributing to the project.
 
 ## Code of Conduct
@@ -34,6 +39,11 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 2. Create a new branch for your feature/fix
 3. Make your changes
 4. Run tests and ensure they pass
+   * ```bash cargo test```
+   * Basic functions work, such as
+      * Image loading
+      * Image saving
+      * Image manipulation
 5. Update documentation if necessary
 6. Submit a pull request
 
@@ -92,7 +102,7 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 
 - Follow the [Rust Style Guide](https://doc.rust-lang.org/1.0.0/style/style/naming/README.html)
 - Use meaningful variable and function names
-- Write clear, concise comments
+- Write clear, concise comments and commits
 - Document all public APIs
 - Keep functions small and focused
 

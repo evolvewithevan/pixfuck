@@ -1,11 +1,16 @@
 # Architecture Overview
 
+- [Documentation Index](index.md)
+- [API Documentation](api.md)
+- [Development Guide](development.md)
+- [Contributing Guidelines](contributing.md)
+
 This document provides a high-level overview of Pixfuck's architecture and design decisions.
 
 ## System Architecture
 
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+
+```┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │                 │     │                 │     │                 │
 │  Input Layer    │────▶│ Processing Core │────▶│  Output Layer   │
 │                 │     │                 │     │                 │
