@@ -15,6 +15,13 @@ A fast pixel sorting tool written in Rust that creates artistic effects by sorti
 - **Simple CLI Interface**: Easy-to-use command-line interface
 - **Multiple Image Formats**: Supports common image formats (PNG, JPEG, etc.)
 
+## Documentation
+
+- [API Documentation](docs/api.md) - Detailed documentation of all public APIs and functions
+- [Development Guide](docs/development.md) - Guide for setting up the development environment and workflow
+- [Contributing Guidelines](docs/contributing.md) - Guidelines for contributing to the project
+- [Architecture Overview](docs/architecture.md) - High-level overview of the project's architecture
+
 ## Installation
 
 ### From Pre-Built Binaries
@@ -36,8 +43,17 @@ Pre-built binaries are not available for this development branch. Please build f
    cargo build --release
    ```
 
-5. (Optional - Not recommended) Install globally:
+4. (Optional - Not recommended) Install globally:
    ```bash
    cargo install --path .
    ```
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](docs/contributing.md) for details on how to get started.
+
+## License
+
+This project is licensed under the terms of the [LICENSE](LICENSE) file.
+
 
