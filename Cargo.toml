@@ -1,0 +1,13 @@
+[package]
+name = "pixfuck"
+version = "0.1.1"
+edition = "2021"
+
+[dependencies]
+image = "0.25"
+rayon = "1.10"
+palette = { version = "0.7", features = ["std"] }
+clap = { version = "4.5", features = ["derive"] }
+log = "0.4"
+env_logger = "0.11"
+dirs = "4.0" 
