@@ -39,26 +39,38 @@ debug.log
 ehthumbs.db
 Thumbs.db
 
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
+# Rust
+/target/
+**/*.rs.bk
+*.pdb
+Cargo.lock
+
+# Rust build artifacts
+*.rlib
+*.rmeta
 *.so
-.Python
-build/
-dist/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-.python-version
+*.dylib
+*.dll
+*.exe
+
+# Rust profiling data
+*.profraw
+*.profdata
+
+# Rust documentation
+/doc/
+
+# Rust testing
+/tests/target/
+/benches/target/
+
+# Rust IDE files
+rust-project.json
+.rust-analyzer/
+
+# Rust flamegraph
+flamegraph.svg
+perf.data*
 
 
 # Misc
